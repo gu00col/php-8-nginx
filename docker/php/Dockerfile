@@ -1,4 +1,7 @@
-FROM php:8.0-fpm
+# syntax=docker/dockerfile:1
+
+ARG PHP_VERSION
+FROM php:${PHP_VERSION}-fpm
 
 WORKDIR /var/www
 

@@ -1,0 +1,6 @@
+# ENV
+.env
+
+# Public
+/public/*
+!/public/.gitkeep

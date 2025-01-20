@@ -5,8 +5,12 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
+      args:
+        - PHP_VERSION=${PHP_VERSION}
     volumes:
       - .:/var/www
+    env_file:
+      - .env
 
   nginx:
     build:
