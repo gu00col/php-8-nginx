@@ -1,28 +1,36 @@
 # syntax=docker/dockerfile:1
 
-ARG PHP_VERSION
-FROM php:${PHP_VERSION}-fpm
+FROM php:8.2-cli
 
 WORKDIR /var/www
 
 RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libpq-dev \
-    libsqlite3-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd \
-    && docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql pdo_sqlite
+    libicu-dev \
+    libzip-dev \
+    libonig-dev \
+    libssl-dev \
+    zip \
+    unzip \
+    git \
+    && docker-php-ext-install -j$(nproc) \
+    intl \
+    mysqli \
+    pdo_mysql \
+    zip \
+    && docker-php-ext-enable \
+    intl \
+    mysqli \
+    pdo_mysql \
+    zip
+
+# Limpa o cache para reduzir o tamanho da imagem
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Instala o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Copia o código-fonte para o diretório de trabalho
 COPY . /var/www
 
-# Copiar arquivo php.ini
-COPY docker/php/php.ini /usr/local/etc/php/php.ini
-
-EXPOSE 9000
-
-CMD ["php-fpm"]
+# Copia o arquivo php.ini personalizado
+COPY docker/php/configs /usr/local/etc/php/conf.d
