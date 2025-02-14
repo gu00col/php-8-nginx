@@ -11,10 +11,10 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - .:/var/www
+      - ./public:/var/www
       - ./docker/php/configs:/usr/local/etc/php/conf.d
     env_file:
       - .env
     ports:
       - "${PHP_PORT_EXTERNAL}:80"
-    entrypoint: "php -S 0.0.0.0:80 -t ${PHP_DIRECTORY}"
+    entrypoint: "php -S 0.0.0.0:80 -t /var/www"

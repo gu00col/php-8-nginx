@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM php:8.2-cli
+FROM php:8.2-apache
 
 WORKDIR /var/www
 
@@ -23,7 +23,6 @@ RUN apt-get update && apt-get install -y \
     pdo_mysql \
     zip
 
-    
 # Limpa o cache para reduzir o tamanho da imagem
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -42,3 +41,9 @@ COPY ./public /var/www
 
 # Copia o arquivo php.ini personalizado
 COPY docker/php/configs /usr/local/etc/php/conf.d
+
+# Habilita o módulo de reescrita do Apache
+RUN a2enmod rewrite
+
+# Copia o arquivo de configuração do Apache
+COPY docker/apache/vhost.conf /etc/apache2/sites-available/000-default.conf

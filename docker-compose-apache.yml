@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  php:
+    container_name: "${CONTAINER_NAME}"
+    build:
+      context: .
+      dockerfile: docker/php/apache/Dockerfile
+      args:
+        PHP_VERSION: ${PHP_VERSION}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./public:/var/www
+      - ./docker/php/configs:/usr/local/etc/php/conf.d
+      - ./docker/apache/vhost.conf:/etc/apache2/sites-available/000-default.conf
+    env_file:
+      - .env
+    ports:
+      - "${PHP_PORT_EXTERNAL}:80"
