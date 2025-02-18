@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1
 
-FROM php:8.2-cli
+ARG PHP_VERSION
+FROM php:${PHP_VERSION}-cli
 
 WORKDIR /var/www
 
@@ -13,12 +14,10 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     && docker-php-ext-install -j$(nproc) \
-    intl \
     mysqli \
     pdo_mysql \
     zip \
     && docker-php-ext-enable \
-    intl \
     mysqli \
     pdo_mysql \
     zip
